@@ -21,7 +21,7 @@ function App () {
             {/* <form onSub> */}
             <div className="form-group">
               <label >Horas</label>
-              <input value='2' className="form-control" onChange={({ target }) => setTime(target.value)} />
+              <input defaultValue='2' className="form-control" onChange={({ target }) => setTime(target.value)} />
             </div>
             <div className="form-group">
               <label >Tempo entre chegadas</label>
