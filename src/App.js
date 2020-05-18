@@ -4,7 +4,13 @@ import {simular} from './simularLavacar'
 
 function App () {
   function run () {
-    simular({ horas, chegadaDeterministica, tempoServicoDeterministico })
+    if(expressaoChegada === 'normal'){
+      simular({ horas, expressaoChegada, media, variancia, tempoServicoDeterministico })
+
+    }else{
+
+      simular({ horas, chegadaDeterministica, tempoServicoDeterministico })
+    }
   }
 
   const [horas, setTime] = React.useState(2)
@@ -12,6 +18,8 @@ function App () {
   const [chegadaDeterministica, setChegadaDeterministica] = React.useState(0)
   const [expressaoServico, setExpressaoServico] = React.useState('fixed')
   const [tempoServicoDeterministico, setTempoServicoDeterministico] = React.useState(0)
+  const [media,setMedia] = React.useState()
+  const [variancia,setVariancia] = React.useState()
 
   return (
     <div className="App">
@@ -25,8 +33,8 @@ function App () {
             </div>
             <div className="form-group">
               <label >Tempo entre chegadas</label>
-              <select value='fixed' className="form-control" onChange={({ target }) => setExpressaoChegada(target.value)} >
-                <option value='random'>Aleatório</option>
+              <select defaultValue='fixed' className="form-control" onChange={({ target }) => setExpressaoChegada(target.value)} >
+                <option value='normal'>Aleatório normal</option>
                 <option value='fixed'>Determinístico</option>
               </select>
             </div>
@@ -37,6 +45,22 @@ function App () {
               </div>
             )}
 
+            {expressaoChegada === 'normal' && (
+              <>
+                <div className="form-group">
+                  <label >Média</label>
+                  <input className="form-control" onChange={({ target }) => setMedia(target.value)} />
+                </div>
+                <div className="form-group">
+                  <label >Variância</label>
+                  <input className="form-control" onChange={({ target }) => setVariancia(target.value)} />
+                </div>
+              </>
+            )}
+            <br/>
+            <br/>
+            <br/>
+            <hr/>
             <div className="form-group">
               <label >Tempo de serviço</label>
               <select value='fixed' className="form-control" onChange={({ target }) => setExpressaoServico(target.value)} >
