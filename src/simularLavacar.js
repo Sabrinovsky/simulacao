@@ -36,7 +36,7 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
   for (let i = 0; i <= minutos; i++) {
     if(funcionario.fila.length >= maxFila) {
       console.log('Fila atingiu o tamanho máximo')
-      return
+      return {error:'Atingiu tomanho total da fila'}
     }
 
     if(funcionario.atendendo && i === terminoProximoServico ){
@@ -65,8 +65,7 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
     }
   }
 
-  console.log(funcionario)
-  console.log(clientes)
+
 
   // clientes.map((cliente, index)=>{
   //   if(cliente.entradaFila && cliente.entradaAtendimento){
@@ -74,16 +73,49 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
   //   }
   // })
 
-  var mediaEntidadesNaFila = 0
-  for(let i=0;i<filaPorMinuto.length;i++){
-    mediaEntidadesNaFila += filaPorMinuto[i]
-  }
-  mediaEntidadesNaFila = mediaEntidadesNaFila / filaPorMinuto.length
+  // var mediaEntidadesNaFila = 0
+  // for(let i=0;i<filaPorMinuto.length;i++){
+  //   mediaEntidadesNaFila += filaPorMinuto[i]
+  // }
+  // mediaEntidadesNaFila = mediaEntidadesNaFila / filaPorMinuto.length
 
   // console.log('Média de entidades na fila: ', mediaEntidadesNaFila)
 
-  if(funcionario.fila.length >= maxFila){
-  }
+  var totalTempoFila = 0
+  var numeroClientesFila = 0
+
+  clientes.forEach((cliente)=>{
+    if(cliente.entradaFila && cliente.entradaAtendimento){
+      totalTempoFila += cliente.entradaAtendimento - cliente.entradaFila
+      numeroClientesFila++;
+    }
+  })
+
+  var tempoTotalSistema = 0
+  var numeroTotalClientesQueSairam = 0
+  clientes.forEach((cliente)=>{
+    if(cliente.entradaFila && cliente.entradaAtendimento && cliente.saidaAtendimento){
+      tempoTotalSistema += cliente.saidaAtendimento - cliente.entradaFila
+      numeroTotalClientesQueSairam++
+    }else if(cliente.entradaAtendimento && cliente.saidaAtendimento){
+      console.log(tempoTotalSistema)
+      tempoTotalSistema += cliente.saidaAtendimento - cliente.entradaAtendimento
+      numeroTotalClientesQueSairam++
+    }
+  })
+
+  console.log(tempoTotalSistema)
+  console.log(numeroTotalClientesQueSairam)
+
+  const tempoMedioNoSistema = tempoTotalSistema / numeroTotalClientesQueSairam
+
+  // console.log('tempo médio em fila: ', totalTempoFila/numeroClientesFila)
+
+  // console.log(funcionario)
+  // console.log(clientes)
+
+
+  return ({funcionario,clientes, tempoMedioNaFila: totalTempoFila/numeroClientesFila || 0,tempoMedioNoSistema})
 
   function terminaServico(tempoAtual){
 

@@ -5,10 +5,11 @@ import { simular } from './simularLavacar'
 function App() {
   function run() {
     if (expressaoChegada === 'normal') {
-      simular({ horas, expressaoChegada, media, variancia, tempoServicoDeterministico, exponencial,maxFila })
-
+      const result = simular({ horas, expressaoChegada, media, variancia, tempoServicoDeterministico, exponencial,maxFila })
+      setData(result)
     } else {
-      simular({ horas, chegadaDeterministica, tempoServicoDeterministico, exponencial,maxFila })
+      const result = simular({ horas, chegadaDeterministica, tempoServicoDeterministico, exponencial,maxFila })
+      setData(result)
     }
   }
 
@@ -20,7 +21,15 @@ function App() {
   const [media, setMedia] = React.useState()
   const [variancia, setVariancia] = React.useState()
   const [exponencial, setExponencial] = React.useState()
-  const [maxFila, setMaxFila] = React.useState()
+  const [maxFila, setMaxFila] = React.useState(100)
+  const [data,setData] = React.useState()
+  const [error,setError] = React.useState()
+
+  React.useEffect(()=>{
+    if(data?.error){
+      setError(data.error)
+    }
+  },[data])
 
   return (
     <div className="App">
@@ -30,7 +39,7 @@ function App() {
             {/* <form onSub> */}
             <div className="form-group">
               <label >Tamanho maximo de fila</label>
-              <input defaultValue='2' className="form-control" onChange={({ target }) => setMaxFila(target.value)} />
+              <input defaultValue='100' className="form-control" onChange={({ target }) => setMaxFila(target.value)} />
             </div>
 
             <div className="form-group">
@@ -91,6 +100,52 @@ function App() {
 
             <button onClick={run}>Simular</button>
             {/* </form> */}
+          </div>
+
+          <div className='col'>
+              {data?.error && (<h3>{data.error}</h3>) }
+
+              {data?.clientes && (
+                <table className='table'>
+                  <thead>
+                    <tr>
+                      <th>
+                        Entrada fila
+                      </th>
+                      <th>
+                        Entrada atendimento
+                      </th>
+                      <th>
+                        Saida atendimento
+                      </th>
+                    </tr>
+                  </thead>
+                <tbody>
+                  {data.clientes.map((cliente) => (
+                        <tr key={cliente.id}>
+                          <td>
+                            {cliente.entradaFila}
+                          </td>
+                          <td>
+                            {cliente.entradaAtendimento}
+                          </td>
+                          <td>
+                          {cliente.saidaAtendimento}
+                          </td>
+                      </tr>
+                    ))}
+                </tbody>
+
+                </table>
+              )}
+              <hr></hr>
+              {!!data?.tempoMedioNaFila && (
+                <h4>O tempo médio na fila foi de {data.tempoMedioNaFila} minutos</h4>
+              )}
+
+              {!!data?.tempoMedioNoSistema && (
+                <h4>O tempo médio no sistema foi de {data.tempoMedioNoSistema} minutos</h4>
+              )}
           </div>
         </div>
       </div>
