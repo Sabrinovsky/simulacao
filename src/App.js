@@ -1,15 +1,14 @@
 import React from 'react'
 import './App.css'
-import {simular} from './simularLavacar'
+import { simular } from './simularLavacar'
 
-function App () {
-  function run () {
-    if(expressaoChegada === 'normal'){
-      simular({ horas, expressaoChegada, media, variancia, tempoServicoDeterministico })
+function App() {
+  function run() {
+    if (expressaoChegada === 'normal') {
+      simular({ horas, expressaoChegada, media, variancia, tempoServicoDeterministico, exponencial })
 
-    }else{
-
-      simular({ horas, chegadaDeterministica, tempoServicoDeterministico })
+    } else {
+      simular({ horas, chegadaDeterministica, tempoServicoDeterministico, exponencial })
     }
   }
 
@@ -18,8 +17,9 @@ function App () {
   const [chegadaDeterministica, setChegadaDeterministica] = React.useState(0)
   const [expressaoServico, setExpressaoServico] = React.useState('fixed')
   const [tempoServicoDeterministico, setTempoServicoDeterministico] = React.useState(0)
-  const [media,setMedia] = React.useState()
-  const [variancia,setVariancia] = React.useState()
+  const [media, setMedia] = React.useState()
+  const [variancia, setVariancia] = React.useState()
+  const [exponencial, setExponencial] = React.useState()
 
   return (
     <div className="App">
@@ -57,14 +57,15 @@ function App () {
                 </div>
               </>
             )}
-            <br/>
-            <br/>
-            <br/>
-            <hr/>
+            <br />
+            <br />
+            <br />
+            <hr />
+
             <div className="form-group">
               <label >Tempo de serviço</label>
-              <select value='fixed' className="form-control" onChange={({ target }) => setExpressaoServico(target.value)} >
-                <option value='random'>Aleatório</option>
+              <select defaultValue='fixed' className="form-control" onChange={({ target }) => { setExpressaoServico(target.value);setExponencial(0);setTempoServicoDeterministico(0) }} >
+                <option value='expo'>Aleatório exponencial</option>
                 <option value='fixed'>Determinístico</option>
               </select>
             </div>
@@ -74,6 +75,14 @@ function App () {
                 <input className="form-control" onChange={({ target }) => setTempoServicoDeterministico(target.value)} />
               </div>
             )}
+
+            {expressaoServico === 'expo' && (
+              <div className="form-group">
+                <label >Media Exponencial</label>
+                <input className="form-control" onChange={({ target }) => setExponencial(target.value)} />
+              </div>
+            )}
+
             <button onClick={run}>Simular</button>
             {/* </form> */}
           </div>

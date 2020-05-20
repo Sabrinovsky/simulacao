@@ -1,6 +1,7 @@
-export function simular ({ horas, chegadaDeterministica, expressaoChegada, media, variancia, tempoServicoDeterministico }) {
+export function simular ({ horas, chegadaDeterministica, expressaoChegada, media, variancia, tempoServicoDeterministico, exponencial }) {
   const minutos = horas * 60
   const clientes = []
+  const filaPorMinuto = []
   let funcionario = { fila:[], atendendo: null}
 
   function intervaloChegada(){
@@ -17,10 +18,19 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
     }
   }
 
+  function intervaloServico(){
+    if(tempoServicoDeterministico){
+      return parseInt(tempoServicoDeterministico)
+    }
+
+    if(exponencial){
+        const result = Math.round((-exponencial * Math.log(Math.random())))
+        return result || 1
+    }
+  }
+
   let proximoCliente = intervaloChegada()
 
-
-  const intervaloServico = parseInt(tempoServicoDeterministico)
   let terminoProximoServico = undefined
 
   for (let i = 0; i <= minutos; i++) {
@@ -33,7 +43,7 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
       alocaCliente({id:i},i)
     }
 
-
+    filaPorMinuto.push(funcionario.fila.length)
   }
 
   function alocaCliente(cliente,tempoAtual){
@@ -44,7 +54,7 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
       clientes[tempoAtual] = {id:tempoAtual, entradaFila: tempoAtual}
     }else{
       funcionario = {...funcionario, atendendo: cliente}
-      terminoProximoServico = intervaloServico + tempoAtual
+      terminoProximoServico = intervaloServico() + tempoAtual
       clientes[tempoAtual] = {...clientes[tempoAtual], id:tempoAtual, entradaFila: 0, entradaAtendimento: tempoAtual}
 
     }
@@ -53,6 +63,19 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
   console.log(funcionario)
   console.log(clientes)
 
+  // clientes.map((cliente, index)=>{
+  //   if(cliente.entradaFila && cliente.entradaAtendimento){
+  //     console.log('tempo na fila: ', cliente.entradaAtendimento - cliente.entradaFila )
+  //   }
+  // })
+
+  var mediaEntidadesNaFila = 0
+  for(let i=0;i<filaPorMinuto.length;i++){
+    mediaEntidadesNaFila += filaPorMinuto[i]
+  }
+  mediaEntidadesNaFila = mediaEntidadesNaFila / filaPorMinuto.length
+
+  console.log('Média de entidades na fila: ', mediaEntidadesNaFila)
 
   function terminaServico(tempoAtual){
 
@@ -65,7 +88,7 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
       clientes[funcionario.fila[0].id] = {...clientes[funcionario.fila[0].id], entradaAtendimento: tempoAtual}
 
       funcionario = {...funcionario, atendendo:funcionario.fila[0], fila: novaFila}
-      terminoProximoServico = intervaloServico + tempoAtual
+      terminoProximoServico = intervaloServico() + tempoAtual
 
 
     }else{
