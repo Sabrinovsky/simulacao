@@ -1,4 +1,4 @@
-export function simular ({ horas, chegadaDeterministica, expressaoChegada, media, variancia, tempoServicoDeterministico, exponencial }) {
+export function simular ({ horas, chegadaDeterministica, expressaoChegada, media, variancia, tempoServicoDeterministico, exponencial ,maxFila}) {
   const minutos = horas * 60
   const clientes = []
   const filaPorMinuto = []
@@ -34,6 +34,11 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
   let terminoProximoServico = undefined
 
   for (let i = 0; i <= minutos; i++) {
+    if(funcionario.fila.length >= maxFila) {
+      console.log('Fila atingiu o tamanho máximo')
+      return
+    }
+
     if(funcionario.atendendo && i === terminoProximoServico ){
       terminaServico(i)
     }
@@ -75,7 +80,10 @@ export function simular ({ horas, chegadaDeterministica, expressaoChegada, media
   }
   mediaEntidadesNaFila = mediaEntidadesNaFila / filaPorMinuto.length
 
-  console.log('Média de entidades na fila: ', mediaEntidadesNaFila)
+  // console.log('Média de entidades na fila: ', mediaEntidadesNaFila)
+
+  if(funcionario.fila.length >= maxFila){
+  }
 
   function terminaServico(tempoAtual){
 

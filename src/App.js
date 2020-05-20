@@ -5,10 +5,10 @@ import { simular } from './simularLavacar'
 function App() {
   function run() {
     if (expressaoChegada === 'normal') {
-      simular({ horas, expressaoChegada, media, variancia, tempoServicoDeterministico, exponencial })
+      simular({ horas, expressaoChegada, media, variancia, tempoServicoDeterministico, exponencial,maxFila })
 
     } else {
-      simular({ horas, chegadaDeterministica, tempoServicoDeterministico, exponencial })
+      simular({ horas, chegadaDeterministica, tempoServicoDeterministico, exponencial,maxFila })
     }
   }
 
@@ -20,6 +20,7 @@ function App() {
   const [media, setMedia] = React.useState()
   const [variancia, setVariancia] = React.useState()
   const [exponencial, setExponencial] = React.useState()
+  const [maxFila, setMaxFila] = React.useState()
 
   return (
     <div className="App">
@@ -27,6 +28,11 @@ function App() {
         <div className='row'>
           <div className='col-5'>
             {/* <form onSub> */}
+            <div className="form-group">
+              <label >Tamanho maximo de fila</label>
+              <input defaultValue='2' className="form-control" onChange={({ target }) => setMaxFila(target.value)} />
+            </div>
+
             <div className="form-group">
               <label >Horas</label>
               <input defaultValue='2' className="form-control" onChange={({ target }) => setTime(target.value)} />
